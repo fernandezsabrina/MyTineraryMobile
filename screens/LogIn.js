@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
-const LogIn = () => {
+const LogIn = (props) => {
     return (
         <ImageBackground style={styles.container} source={require('../assets/bg2.jpg')}>
             <View style={styles.logoView}>
@@ -23,7 +21,7 @@ const LogIn = () => {
                     </View>
                 </TouchableOpacity>
                 <Text style={styles.textoAcc}>You don't have an account?</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => props.navigation.navigate("Register")}>
                     <View style={styles.buttonRegister}>
                         <Text style={styles.texto}>REGISTER</Text>
                     </View>

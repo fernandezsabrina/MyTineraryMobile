@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const City = (props) => {
     const [itineraries, setItineraries] = useState([])
+    const cityId = props.route.params._id
 
     useEffect(() => {
-        console.warn(props)
-        fetch('https://mytineraryweb.herokuapp.com/city/id')
+        fetch(`https://mytineraryweb.herokuapp.com/itineraries/${cityId}`)
             .then(res => res.json())
-            .then(data => setCities(data.respuesta))
+            .then(data => setItineraries(data.respuesta))
     })
     return (
         <ScrollView>
@@ -23,60 +21,70 @@ const City = (props) => {
                 <Image source={require('../assets/logomytinerary.png')} style={styles.logo}></Image>
             </View>
             <View style={styles.cityBox}>
-                <Text style={styles.cityName}></Text>
-                <Image style={styles.cityPic}></Image>
-                <View style={styles.itineraryBox}>
-                    <View style={styles.titleUser}>
-                        <View style={styles.userInfo}>
-                            <View style={styles.userPic}>
-                            </View>
-                            <Text style={{ color: 'white', marginTop: 10 }}>UserName</Text>
-                        </View>
-                        <View style={styles.titleInfo}>
-                            <Text style={styles.title}>Itinerary Title</Text>
-                            <View style={styles.info}>
-                                <View style={styles.hashtags}>
+                <Text style={styles.cityName}>{props.route.params.name}</Text>
+                <Image style={styles.cityPic} source={{ uri: `${props.route.params.url}` }}></Image>
+                {itineraries.length === 0 ?
+                    <View style={styles.noItineraryBox}>
+                        <Text>Sorry, we have no itineraries yet...</Text>
+                    </View>
+                    :
+                    itineraries.map((itinerary, i) => {
+                        return (
+                            <View style={styles.itineraryBox} key={i}>
+                                <View style={styles.titleUser}>
+                                    <View style={styles.userInfo}>
+                                        <Image style={styles.userPic} source={{ uri: `${itinerary.userPic}` }}>
+                                        </Image>
+                                        <Text style={{ color: 'white', marginTop: 10 }}>{itinerary.userName}</Text>
+                                    </View>
+                                    <View style={styles.titleInfo}>
+                                        <Text style={styles.title}>{itinerary.title}</Text>
+                                        <View style={styles.info}>
+                                            <View style={styles.hashtags}>
+                                                {itinerary.hashtag.map(hash => {
+                                                    return (
+                                                        <Text style={{ padding: 1.5, color: 'purple' }}>{hash}</Text>
+                                                    )
+                                                })}
+
+                                            </View>
+                                            <View style={styles.likes}>
+                                                <View style={styles.iconsBox}>
+                                                    <Image source={require('../assets/fullLike.png')} style={{ width: '50%', height: '50%', padding: '22%', margin: '10%' }}></Image>
+                                                    <Text style={{ color: 'white' }}>{itinerary.likes}</Text>
+                                                </View>
+                                                <View style={styles.iconsBox}>
+                                                    <Image source={require('../assets/clock.png')} style={{ width: '65%', height: '65%', padding: '30%', margin: '4%' }}></Image>
+                                                    <Text style={{ color: 'white' }}>{itinerary.duration}</Text>
+                                                </View>
+                                                <View style={styles.iconsBox}>
+                                                    <Text style={{ color: 'lightgreen', fontSize: 20 }}>{Array(itinerary.price).fill("$")}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={styles.activitiesBox}>
+                                    {itinerary.activities.map(activity => {
+                                        return (
+                                            <View style={styles.activity}>
+                                                <View style={styles.actPic}>
+                                                    <Image source={{ uri: `${activity.activityPic}` }} style={{ width: '100%', height: '100%' }}></Image>
+                                                </View>
+                                                <Text style={styles.actTitle}>{activity.activityTitle}</Text>
+                                            </View>
+                                        )
+                                    })}
 
                                 </View>
-                                <View style={styles.likes}>
-                                    <View style={styles.iconsBox}>
-                                        <Image source={require('../assets/fullLike.png')} style={{ width: '50%', height: '50%', padding: '22%', margin: '10%' }}></Image>
-                                        <Text style={{ color: 'white' }}>5</Text>
-                                    </View>
-                                    <View style={styles.iconsBox}>
-                                        <Image source={require('../assets/clock.png')} style={{ width: '65%', height: '65%', padding: '30%', margin: '4%' }}></Image>
-                                        <Text style={{ color: 'white' }}>6</Text>
-                                    </View>
-                                    <View style={styles.iconsBox}>
-                                        <Image></Image>
-                                        <Text></Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.activitiesBox}>
-                        <View style={styles.activity}>
-                            <View style={styles.actPic}>
-                                <Image source={require('../assets/michi.jpg')} style={{ width: '100%', height: '100%' }}></Image>
-                            </View>
-                            <Text style={styles.actTitle}>Activity Title</Text>
-                        </View>
-                        <View style={styles.activity}>
-                            <View style={styles.actPic}>
-                                <Image source={require('../assets/michi.jpg')} style={{ width: '100%', height: '100%' }}></Image>
-                            </View>
-                            <Text style={styles.actTitle}>Activity Title</Text>
-                        </View>
-                        <View style={styles.activity}>
-                            <View style={styles.actPic}>
-                                <Image source={require('../assets/michi.jpg')} style={{ width: '100%', height: '100%' }}></Image>
-                            </View>
-                            <Text style={styles.actTitle}>Activity Title</Text>
-                        </View>
-                    </View>
 
-                </View>
+                            </View>
+                        )
+
+                    })
+
+                }
+
             </View>
         </ScrollView>
     )
@@ -131,6 +139,16 @@ const styles = {
         marginBottom: 5,
         paddingTop: 7,
     },
+    noItineraryBox: {
+        width: '95%',
+        height: 200,
+        backgroundColor: 'purple',
+        marginBottom: 30,
+        borderRadius: 20,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     itineraryBox: {
         width: '95%',
         height: 300,
@@ -138,13 +156,18 @@ const styles = {
         marginBottom: 30,
         borderRadius: 20,
         flexDirection: 'column',
-
     },
     iconsBox: {
         width: '30%',
         height: '100%',
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    userInfo: {
+        width: '30%',
+        justifyContent: 'center',
+        alignItems: 'center'
+
     },
     titleUser: {
         width: '100%',
@@ -156,8 +179,8 @@ const styles = {
     },
     userPic: {
         backgroundColor: 'pink',
-        width: '100%',
-        height: '55%',
+        width: '80%',
+        height: '70%',
         borderRadius: 100,
         marginTop: 10
     },
@@ -170,7 +193,8 @@ const styles = {
         width: '80%',
         textAlign: 'center',
         marginBottom: 10,
-        color: 'white'
+        color: 'white',
+        marginTop: 20
     },
     info: {
         backgroundColor: 'purple',
@@ -178,12 +202,13 @@ const styles = {
         height: '70%'
     },
     hashtags: {
-        backgroundColor: 'orange',
+        backgroundColor: 'pink',
         width: '100%',
-        height: '40%',
+        height: '50%',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        borderRadius: 5
     },
     likes: {
         width: '100%',

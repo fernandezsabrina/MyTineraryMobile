@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Homepage = (props) => {
