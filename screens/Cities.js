@@ -4,18 +4,15 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
-const Cities = () => {
+const Cities = (props) => {
     const [cities, setCities] = useState([])
 
     useEffect(() => {
-        fetch('http://192.168.0.73:4000/cities')
+        fetch('https://mytineraryweb.herokuapp.com/cities')
             .then(res => res.json())
             .then(data => setCities(data.respuesta))
     })
 
-
-
-    // const cities = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"]
     return (
         <ScrollView>
 
@@ -34,14 +31,14 @@ const Cities = () => {
                 </View>
             </View>
             <View style={styles.boxCities}>
-                {cities.map(({name, url}, i) => {
+                {cities.map((city, i) => {
                     return (
                         <View key={i} style={styles.city} >
-                            <ImageBackground style={styles.cityPic} source={{ uri: `${url}` }}>
-                                <Text style={styles.textCity}>{`${name}`}</Text>
-                            </ImageBackground>
-
-
+                            <TouchableOpacity style={{width:400}} onPress={() => props.navigation.navigate("City", city)}>
+                                <ImageBackground style={styles.cityPic} source={{ uri: `${city.url}` }}>
+                                    <Text style={styles.textCity}>{`${city.name}`}</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
                         </View>
                     )
                 })}
@@ -89,7 +86,7 @@ const styles = {
     },
     titleCities: {
         fontSize: 40,
-        color: 'purple'
+        color: 'purple',
     },
     boxCities: {
         width: '100%',
@@ -101,7 +98,6 @@ const styles = {
         width: '90%',
         height: '6%',
         marginBottom: 20,
-        backgroundColor: 'pink',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -115,7 +111,7 @@ const styles = {
     cityPic: {
         width: '100%',
         height: '100%',
-        justifyContent:'center'
+        justifyContent: 'center'
     }
 
 }

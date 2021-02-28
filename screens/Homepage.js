@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Homepage = () => {
+const Homepage = (props) => {
     return (
         <>
             <ScrollView>
@@ -20,7 +20,7 @@ const Homepage = () => {
                     <Image source={require('../assets/foto2.png')} style={styles.pictures}></Image>
                     <Image source={require('../assets/foto3.png')} style={styles.pictures}></Image>
                 </View>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 10 }}>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 10 }} onPress={() => props.navigation.navigate("Cities")}>
                     <View style={styles.buttonStart}>
                         <Text style={styles.texto}>LET'S TRAVEL!</Text>
                     </View>

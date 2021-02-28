@@ -1,17 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-const Initial = () => {
+const Initial = (props) => {
     return (
         <>
             <View style={styles.container}>
                 <ImageBackground source={require('../assets/bg4final.png')} style={styles.bg}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => props.navigation.navigate("Homepage")}>
                         <View style={styles.buttonStart}>
                             <Text style={styles.texto}>GET STARTED</Text>
                         </View>
