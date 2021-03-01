@@ -1,46 +1,87 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux'
+import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
+import authActions from '../Redux/Actions/authActions'
 
 const Register = () => {
+    const [newUserForm, setNewUserForm] = useState({})
+    const [errores, setErrores] = useState([])
+
+    const readInput = () => {
+        const valor = e.target.value
+        const campo = e.target.name
+        setNewUserForm({
+            ...nuevoUsuario,
+            [campo]: valor
+        })
+
+    }
+    const validateUser = async e => {
+
+        if (newUserForm.name === '' || newUserForm.username === '' || newUserForm.lastname === ''
+            || newUserForm.email === '' || newUserForm.password === ''
+            || newUserForm.country === '' || !newUserForm.name || !newUserForm.username || !newUserForm.lastname
+            || !newUserForm.email || !newUserForm.password || !newUserForm.country) {
+            ToastAndroid.show('All fields must be completed!', ToastAndroid.LONG)
+            return false
+        }
+
+        setErrores([])
+        const respuesta = await props.newUser(newUserForm)
+        if (respuesta && !respuesta.success) {
+            setErrores(respuesta.errores)
+        } else {
+
+            Swal.fire(
+                'Great!',
+                'New account created',
+                'success'
+            )
+        }
+
+    }
+
     const countries = [
         "Argentina", "México", "Brasil", "United States", "Spain", "Canada", "United Kingdom", "Japan", "Germany", "China", "France", "Italy", "New Zealand"
     ]
+
     return (
         <ImageBackground style={styles.container} source={require('../assets/bg7.jpg')}>
             <View style={styles.logoView}>
                 <Image source={require('../assets/logomytinerary.png')} style={styles.logoImg}></Image>
             </View>
             <View style={{ width: '100%', height: '20%', alignItems: 'center', justifyContent: 'center', marginBottom: 80 }}>
-                <TextInput placeholder='Username' style={styles.input}>
+                <TextInput placeholder='Username' style={styles.input} onChangeText={readInput}>
                 </TextInput>
-                <TextInput placeholder='Name' style={styles.input}>
+                <TextInput placeholder='Name' style={styles.input} onChangeText={readInput}>
                 </TextInput>
-                <TextInput placeholder='Lastname' style={styles.input}>
+                <TextInput placeholder='Lastname' style={styles.input} onChangeText={readInput}>
                 </TextInput>
-                <TextInput placeholder='E-mail' style={styles.input}>
+                <TextInput placeholder='E-mail' style={styles.input} onChangeText={readInput}>
                 </TextInput>
-                <TextInput secureTextEntry={true} placeholder='Password' style={styles.input}>
+                <TextInput secureTextEntry={true} placeholder='Password' style={styles.input} onChangeText={readInput}>
                 </TextInput>
                 <RNPickerSelect style={customPickerStyles}
-                useNativeAndroidPickerStyle={false}
-                placeholder={{ label: "Country", value: null }}
-                 onValueChange={(value) => console.log(value)}
-                 items={
-                     countries.map(country=>{
-                         return(
-                            { label: country, value: country }
-                         )
-                     })
-                    
-                 }
-             />
+                    onChangeText={readInput}
+                    useNativeAndroidPickerStyle={false}
+                    placeholder={{ label: "Country", value: null }}
+                    onValueChange={(value) => console.log(value)}
+                    items={
+                        countries.map(country => {
+                            return (
+                                { label: country, value: country }
+                            )
+                        })
+
+                    }
+                />
             </View>
             <View style={styles.buttonBox}>
                 <TouchableOpacity>
                     <View style={styles.buttonLogin}>
-                        <Text style={styles.texto}>CREATE ACCOUNT</Text>
+                        <Text style={styles.texto} onPress={validateUser}>CREATE ACCOUNT</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -48,7 +89,17 @@ const Register = () => {
     )
 }
 
-export default Register
+const mapStateToProps = state => {
+    return {
+        loggedUser: state.auth.loggedUser
+    }
+}
+
+const mapDispatchToProps = {
+    newUser: authActions.newUser
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register)
 
 const styles = {
     container: {
@@ -94,11 +145,12 @@ const styles = {
         marginBottom: 5,
     },
     buttonBox: {
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 20
     },
     buttonLogin: {
         backgroundColor: '#894789',
-        marginBottom: 80,
+        marginBottom: 50,
         borderTopLeftRadius: 15,
         borderBottomRightRadius: 15,
     },
@@ -112,12 +164,12 @@ const styles = {
 
 const customPickerStyles = StyleSheet.create({
     inputAndroid: {
-        width:250,
-        backgroundColor:'white',
+        width: 250,
+        backgroundColor: 'white',
         fontSize: 14,
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 20,
-        textAlign:'center',
-      },
-    });
+        textAlign: 'center',
+    },
+});

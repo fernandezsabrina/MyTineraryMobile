@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux'
 import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Header from '../Components/Header'
 
 const City = (props) => {
     const [itineraries, setItineraries] = useState([])
@@ -13,13 +15,7 @@ const City = (props) => {
     })
     return (
         <ScrollView>
-            <View style={styles.header}>
-                <Image source={require('../assets/menu.png')} style={styles.menu}></Image>
-                <Image source={require('../assets/userblue.png')} style={styles.user}></Image>
-            </View>
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
-                <Image source={require('../assets/logomytinerary.png')} style={styles.logo}></Image>
-            </View>
+            <Header></Header>
             <View style={styles.cityBox}>
                 <Text style={styles.cityName}>{props.route.params.name}</Text>
                 <Image style={styles.cityPic} source={{ uri: `${props.route.params.url}` }}></Image>
@@ -134,7 +130,9 @@ const styles = {
     cityName: {
         width: '100%',
         height: '5%',
-        backgroundColor: 'violet',
+        color: 'white',
+        fontSize: 30,
+        backgroundColor: 'purple',
         textAlign: 'center',
         marginBottom: 5,
         paddingTop: 7,

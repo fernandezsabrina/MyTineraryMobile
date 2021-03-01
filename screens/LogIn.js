@@ -1,23 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux'
+import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import authActions from '../Redux/Actions/authActions'
 
 const LogIn = (props) => {
+    const [usuarioALoguear, setUsuarioALoguear] = useState({
+        username:'',
+        password:''
+    })
+    const [errores, setErrores] = useState([])
+
+    const validarUser = async() => {
+        const {username, password} = usuarioALoguear
+
+        if (username === '' || password === '' || !username || !password) {
+            ToastAndroid.show('All fields must be completed!', ToastAndroid.LONG)
+            return false
+        }
+        setErrores([])
+        const respuesta = await props.loginUser(usuarioALoguear)
+
+
+        if (respuesta && !respuesta.success) {
+            setErrores([respuesta.mensaje])
+            ToastAndroid.show(`${errores}`, ToastAndroid.LONG)
+        } else {
+            ToastAndroid.show(`Welcome, ${respuesta.username}!`, ToastAndroid.LONG)
+        }
+
+    }
+
+
     return (
         <ImageBackground style={styles.container} source={require('../assets/bg2.jpg')}>
             <View style={styles.logoView}>
                 <Image source={require('../assets/logomytinerary.png')} style={styles.logoImg}></Image>
             </View>
             <View style={{ width: '100%', height: '20%', alignItems: 'center', justifyContent: 'center' }}>
-                <TextInput placeholder='Username' style={styles.input}>
+                <TextInput name="username" placeholder='Username' style={styles.input} onChangeText={(username) =>setUsuarioALoguear({...usuarioALoguear, username})}>
                 </TextInput>
-                <TextInput secureTextEntry={true} placeholder='Password' style={styles.input}>
+                <TextInput name="password" secureTextEntry={true} placeholder='Password' style={styles.input} onChangeText={(password) =>setUsuarioALoguear({...usuarioALoguear, password})}>
                 </TextInput>
             </View>
             <View style={styles.buttonBox}>
                 <TouchableOpacity>
                     <View style={styles.buttonLogin}>
-                        <Text style={styles.texto}>LOGIN</Text>
+                        <Text style={styles.texto} onPress={validarUser}>LOGIN</Text>
                     </View>
                 </TouchableOpacity>
                 <Text style={styles.textoAcc}>You don't have an account?</Text>
@@ -31,7 +60,17 @@ const LogIn = (props) => {
     )
 }
 
-export default LogIn
+const mapStateToProps = state => {
+    return {
+        loggedUser: state.auth.loggedUser
+    }
+}
+
+const mapDispatchToProps = {
+    loginUser: authActions.loginUser
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogIn)
 
 const styles = {
     container: {
