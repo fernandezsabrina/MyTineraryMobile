@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux'
+import React from 'react';
 import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../Components/Header'
 
 const Homepage = (props) => {
+   
     return (
         <>
             <ScrollView>
@@ -40,7 +40,7 @@ const styles = {
     },
     pictures: {
         width: '80%',
-        height: 310
+        height: 340
     },
     buttonStart: {
         backgroundColor: '#894789',

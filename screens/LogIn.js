@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
-import { Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { Button, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import authActions from '../Redux/Actions/authActions'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LogIn = (props) => {
     const [usuarioALoguear, setUsuarioALoguear] = useState({
         username:'',
         password:''
     })
+
     const [errores, setErrores] = useState([])
 
     const validarUser = async() => {
@@ -24,9 +26,11 @@ const LogIn = (props) => {
 
         if (respuesta && !respuesta.success) {
             setErrores([respuesta.mensaje])
+            console.log(errores)
             ToastAndroid.show(`${errores}`, ToastAndroid.LONG)
         } else {
-            ToastAndroid.show(`Welcome, ${respuesta.username}!`, ToastAndroid.LONG)
+            ToastAndroid.show("Welcome!", ToastAndroid.LONG)
+            props.navigation.navigate("Homepage")
         }
 
     }

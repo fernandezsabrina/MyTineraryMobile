@@ -5,25 +5,25 @@ import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
 import authActions from '../Redux/Actions/authActions'
 
-const Register = () => {
-    const [newUserForm, setNewUserForm] = useState({})
+const Register = (props) => {
+    const [newUserForm, setNewUserForm] = useState({
+        name: '',
+        lastname: '',
+        username: '',
+        country: '',
+        email: '',
+        password: '',
+
+    })
     const [errores, setErrores] = useState([])
 
-    const readInput = () => {
-        const valor = e.target.value
-        const campo = e.target.name
-        setNewUserForm({
-            ...nuevoUsuario,
-            [campo]: valor
-        })
+    const validateUser = async () => {
+        const { name, lastname, username, email, password, country } = newUserForm
 
-    }
-    const validateUser = async e => {
-
-        if (newUserForm.name === '' || newUserForm.username === '' || newUserForm.lastname === ''
-            || newUserForm.email === '' || newUserForm.password === ''
-            || newUserForm.country === '' || !newUserForm.name || !newUserForm.username || !newUserForm.lastname
-            || !newUserForm.email || !newUserForm.password || !newUserForm.country) {
+        if (name === '' || username === '' || lastname === ''
+            || email === '' || password === ''
+            || country === '' || !name || !username || !lastname
+            || !email || !password || !country) {
             ToastAndroid.show('All fields must be completed!', ToastAndroid.LONG)
             return false
         }
@@ -32,13 +32,11 @@ const Register = () => {
         const respuesta = await props.newUser(newUserForm)
         if (respuesta && !respuesta.success) {
             setErrores(respuesta.errores)
+            ToastAndroid.show(`${errores}`, ToastAndroid.LONG)
         } else {
+            ToastAndroid.show(`Welcome ${newUserForm.name}!`, ToastAndroid.LONG)
+            props.navigation.navigate("Homepage")
 
-            Swal.fire(
-                'Great!',
-                'New account created',
-                'success'
-            )
         }
 
     }
@@ -53,21 +51,20 @@ const Register = () => {
                 <Image source={require('../assets/logomytinerary.png')} style={styles.logoImg}></Image>
             </View>
             <View style={{ width: '100%', height: '20%', alignItems: 'center', justifyContent: 'center', marginBottom: 80 }}>
-                <TextInput placeholder='Username' style={styles.input} onChangeText={readInput}>
+                <TextInput placeholder='Username' style={styles.input} onChangeText={(username)=>setNewUserForm({...newUserForm, username})}>
                 </TextInput>
-                <TextInput placeholder='Name' style={styles.input} onChangeText={readInput}>
+                <TextInput placeholder='Name' style={styles.input} onChangeText={(name)=>setNewUserForm({...newUserForm, name})}>
                 </TextInput>
-                <TextInput placeholder='Lastname' style={styles.input} onChangeText={readInput}>
+                <TextInput placeholder='Lastname' style={styles.input} onChangeText={(lastname)=>setNewUserForm({...newUserForm, lastname})}>
                 </TextInput>
-                <TextInput placeholder='E-mail' style={styles.input} onChangeText={readInput}>
+                <TextInput placeholder='E-mail' style={styles.input} onChangeText={(email)=>setNewUserForm({...newUserForm, email})}>
                 </TextInput>
-                <TextInput secureTextEntry={true} placeholder='Password' style={styles.input} onChangeText={readInput}>
+                <TextInput secureTextEntry={true} placeholder='Password' style={styles.input} onChangeText={(password)=>setNewUserForm({...newUserForm,password})}>
                 </TextInput>
                 <RNPickerSelect style={customPickerStyles}
-                    onChangeText={readInput}
                     useNativeAndroidPickerStyle={false}
                     placeholder={{ label: "Country", value: null }}
-                    onValueChange={(value) => console.log(value)}
+                    onValueChange={(country) => setNewUserForm({...newUserForm, country})}
                     items={
                         countries.map(country => {
                             return (

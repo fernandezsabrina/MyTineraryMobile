@@ -14,6 +14,7 @@ import Initial from './screens/Initial';
 import LogIn from './screens/LogIn'
 import Register from './screens/Register'
 import mainReducer from './Redux/Reducers/mainReducer'
+import { connect } from 'react-redux'
 
 const myStore = createStore(mainReducer, applyMiddleware(thunk))
 

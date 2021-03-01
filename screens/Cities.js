@@ -17,10 +17,7 @@ const Cities = (props) => {
             <Header></Header>
             <View style={styles.boxTitle}>
                 <Text style={styles.titleCities}>CITIES</Text>
-                <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'center' }}>
-                    <Image source={require('../assets/lupa.png')} style={{ width: 25, height: 25, marginRight: 10 }}></Image>
-                    <TextInput placeholder='Search'></TextInput>
-                </View>
+                
             </View>
             <View style={styles.boxCities}>
                 {cities.map((city, i) => {

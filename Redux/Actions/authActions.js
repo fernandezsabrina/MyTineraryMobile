@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const authActions = {
     newUser: (nuevoUsuario) => {
+
         return async (dispatch, getState) => {
             const respuesta = await axios.post('https://mytineraryweb.herokuapp.com//user/signup', nuevoUsuario)
             if (!respuesta.data.success) {
@@ -36,7 +37,7 @@ const authActions = {
                     //     title: 'Oops...',
                     //     text: 'Wrong login!!!',
                     // })
-                    localStorage.clear()
+                    // localStorage.clear()
                     return '/'
                 }
             }
@@ -45,7 +46,6 @@ const authActions = {
     },
 
     loginUser: (user) => {
-        console.warn(user)
 
         return async (dispatch, getState) => {
             const respuesta = await axios.post('https://mytineraryweb.herokuapp.com/user/login', user)

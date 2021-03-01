@@ -178,9 +178,9 @@ const styles = {
     userPic: {
         backgroundColor: 'pink',
         width: '80%',
-        height: '70%',
+        height: '80%',
         borderRadius: 100,
-        marginTop: 10
+        marginTop: 20
     },
     titleInfo: {
         width: '70%',
@@ -224,14 +224,20 @@ const styles = {
         justifyContent: 'space-evenly'
     },
     activity: {
-        backgroundColor: 'orange',
+        backgroundColor: 'violet',
         width: '30%',
-        height: '80%',
+        height: '85%',
         alignItems: 'center',
+        borderRadius:10
     },
     actPic: {
-        height: '80%',
+        height: '70%',
         width: '100%',
         backgroundColor: 'lightgreen',
+    },
+    actTitle: {
+        color:'white',
+        textAlign:'center',
+        fontSize:13
     }
 }
