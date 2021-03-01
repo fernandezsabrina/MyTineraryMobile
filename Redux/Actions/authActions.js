@@ -4,10 +4,11 @@ const authActions = {
     newUser: (nuevoUsuario) => {
 
         return async (dispatch, getState) => {
-            const respuesta = await axios.post('https://mytineraryweb.herokuapp.com//user/signup', nuevoUsuario)
+            const respuesta = await axios.post('https://mytineraryweb.herokuapp.com/user/signup', nuevoUsuario)
             if (!respuesta.data.success) {
                 return respuesta.data
-            }
+                
+            }console.log(respuesta.data)
             dispatch({ type: 'LOG_USER', payload: respuesta.data })
         }
     },

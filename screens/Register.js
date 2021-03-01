@@ -34,7 +34,7 @@ const Register = (props) => {
             setErrores(respuesta.errores)
             ToastAndroid.show(`${errores}`, ToastAndroid.LONG)
         } else {
-            ToastAndroid.show(`Welcome ${newUserForm.name}!`, ToastAndroid.LONG)
+            ToastAndroid.show("Welcome!", ToastAndroid.LONG)
             props.navigation.navigate("Homepage")
 
         }
@@ -107,7 +107,8 @@ const styles = {
     logoView: {
         height: 120,
         width: '90%',
-        marginBottom: 80
+        marginBottom: 80,
+        marginTop:60
     },
     logoImg: {
         height: '100%',
